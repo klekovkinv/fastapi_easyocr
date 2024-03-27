@@ -19,14 +19,14 @@ class Model:
         text = ' '.join(text.split())  # remove extra spaces, tabs, line breaks
         return text
 
-    def predict(self, image: bytes) -> str:
+    def predict(self, image: bytes) -> dict[str, str]:
         if self.reader is None:
             raise ValueError("Model not loaded")
 
         image_array = np.array(bytearray(image), dtype=np.uint8)
         img = cv2.imdecode(image_array, -1)
         if img is None or img.size == 0:
-            return ""
+            return {'text': ''}
 
         prediction = self.reader.readtext(img)
         return {'text': self.normalize_text(' '.join([p[1] for p in prediction]))}
